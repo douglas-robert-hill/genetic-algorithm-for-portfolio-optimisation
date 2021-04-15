@@ -1,4 +1,4 @@
-# genetic-algorithm-for-portfolio-optimisation
+# A Genetic Algorithm for Portfolio Optimisation 
 
 Markowitz (1952) proposed the foundation for modern portfolio theory with mean-variance portfolio optimisation. Providing a method for investors to calculate how best to allocate and weight their capital to individual shares based upon their comovements. 
 
