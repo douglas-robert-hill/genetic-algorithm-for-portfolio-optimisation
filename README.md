@@ -9,3 +9,4 @@ Thus, a GA can be applied to the portfolio optimisation problem. This python scr
 The GA is real-value encoded and utilises uniform crossover and boundary mutation with selection based on the roulette wheel method as well as employing elitism. 
 
 The result outputs are not investment advice. There are a series of limitations to this method of portfolio allocation. The program serves as a tool to better understand multi-objective optimisation problems using fiancial data and is not for investment decisions. 
+
