@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 import random
-from pandas_datareader import data
+import pandas_datareader.data as web
 
 tickers = ['AAPL', 'TSLA', 'MSFT']
 population = 150

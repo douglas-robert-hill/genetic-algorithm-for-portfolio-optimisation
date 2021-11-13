@@ -15,6 +15,9 @@ def generate_weights(inputs, population):
        
     return array, n_assets
 
+import numpy as np
+import pandas as pd 
+a = generate_weights(inputs= pd.DataFrame([[1,2,3], [4,5,6]]), population=10)
 
 
 def fitness_func(weights, x1, x2, n_assets, riskFree):
