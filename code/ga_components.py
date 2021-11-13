@@ -1,27 +1,3 @@
-# A real-value encoded GA using uniform crossover and boundary mutation
-# Selection is based on elitism and roulette wheel 
-
-import numpy as np
-import pandas as pd
-import random
-from pandas_datareader import data
-
-
-def get_data(tickers):
-    portfolio = pd.DataFrame()
-    
-    for t in tickers:
-        portfolio[t] = data.DataReader(t, data_source = 'yahoo', start='2019-02-01')['Adj Close']
-        
-    portfolio.columns = tickers
-    returns = np.log(portfolio / portfolio.shift(1))
-    
-    port_return = np.array(returns.mean() * 252)
-    port_risk = returns.cov()
-    
-    return portfolio, port_return, port_risk
-
-
 
 def generate_weights(inputs, population):
     n_assets = len(inputs.columns)
@@ -64,8 +40,6 @@ def elitism(elitism_rate, fit_func_res, n_assets):
     non_elite_results = sorted_ff[:-elite_w] 
     
     return elite_results, non_elite_results
-
-
 
 def selection(parents, n_assets):     
     sol_len = int(len(parents) / 2)
@@ -128,70 +102,3 @@ def mutation(probability, generation, assets):
         return generation
     else:
         return generation
-
-
-
-def normalise(generation, assets):
-    for i in range(0, len(generation)):
-        generation[i][0:assets] /= np.sum(generation[i][0:assets])
-    return generation
-
-
-
-def next_gen(elites, children, no_cross_parents):
-    weights = np.vstack((elites, children, no_cross_parents))
-    return weights 
-
-
-
-def optimal_solution(generations, assets):
-    optimal_weights = generations[generations[:, (assets + 1)].argsort()]
-    return optimal_weights[0]
-
-
-
-def avg_gen_result(weights, n_assets):
-    average = round(np.mean(weights[:, n_assets]), 2)
-    return average
-
-
-
-def genetic_algorithm(tickers, risk_free_rate, population, generations, crossover_rate, mutation_rate, elite_rate):
-    weights, port_return, port_risk = get_data(tickers)
-    weights, n_assets = generate_weights(weights, population)
-
-    for i in range(0, generations):
-        results = fitness_func(weights, port_return, port_risk, n_assets, risk_free_rate)
-        
-        elites, parents = elitism(elite_rate, results, n_assets)
-        parents, no_cross_parents = selection(parents, n_assets)
-        children = crossover(crossover_rate, parents, n_assets)
-        children = mutation(mutation_rate, children, n_assets) 
-        
-        weights = next_gen(elites, children, no_cross_parents)
-        
-        avg_res = avg_gen_result(weights, n_assets)
-        print('Generation', i, ': Average Sharpe Ratio of', avg_res, 'from', len(weights), 'chromosomes')
-        
-    opt_solution = optimal_solution(weights, n_assets)
-    
-    return opt_solution
-
-
-# Function Inputs
-
-tickers = ['AAPL', 'TSLA', 'MSFT']
-population = 150
-risk_free_rate = 2
-generations = 40
-crossover_rate = 0.4
-mutation_rate = 0.01
-elite_rate = 0.25
-
-# Run Function and Return Optimal Weights
-
-optimal_weights = genetic_algorithm(tickers, risk_free_rate, population, generations, crossover_rate, mutation_rate, elite_rate)
-optimal_weights
-
-
-
